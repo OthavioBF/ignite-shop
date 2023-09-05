@@ -1,6 +1,6 @@
 import { styled } from "..";
 
-export const Container = styled("div", {
+export const Container = styled("main", {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -9,6 +9,7 @@ export const Container = styled("div", {
   height: 656,
 
   h1: {
+    marginTop: "2rem",
     fontSize: "$2xl",
     color: "$gray100",
   },
@@ -18,13 +19,13 @@ export const Container = styled("div", {
     color: "$gray300",
     maxWidth: 560,
     textAlign: "center",
-    marginTop: "2rem",
+    marginTop: "1.5rem",
     lineHeight: 1.4,
   },
 
   a: {
     display: "block",
-    marginTop: "5rem",
+    marginTop: "4rem",
     fontSize: "$lg",
     color: "$green500",
     textDecoration: "none",
@@ -35,14 +36,25 @@ export const Container = styled("div", {
   },
 });
 
-export const ImageContainer = styled("header", {
+export const ImagesContainer = styled("div", {
+  marginTop: "8rem",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  "div + div": {
+    marginLeft: "-50px",
+  },
+});
+
+export const ImageContainer = styled("div", {
   background: "linear-gradient(180deg, #1ea483 0%, #7465d4 100%)",
   width: "100%",
   maxWidth: 130,
-  borderRadius: 8,
+  borderRadius: "50%",
   padding: "0.25rem",
-  height: 145,
-  marginTop: "4rem",
+  height: 130,
+  boxShadow: "0 0 60px #121214",
 
   display: "flex",
   alignItems: "center",

@@ -87,6 +87,7 @@ export const CartItem = styled("div", {
   div: {
     display: "flex",
     flexDirection: "column",
+
     strong: {
       color: "$gray300",
       fontSize: "$md",
@@ -108,6 +109,42 @@ export const CartItem = styled("div", {
       rigth: 0,
       border: 0,
       backgroundColor: "$gray800",
+    },
+
+    div: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      width: "100%",
+      height: "2rem",
+
+      button: {
+        width: "2rem",
+        height: "2rem",
+        color: "$white",
+        border: "none",
+
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+
+        borderRadius: 3,
+
+        "&:hover": {
+          background: "$white",
+        },
+      },
+
+      div: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+
+        fontSize: "$xl",
+        width: "2rem",
+        height: "2rem",
+        color: "$gray100",
+      },
     },
   },
 });

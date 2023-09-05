@@ -6,7 +6,8 @@ import { Handbag } from "phosphor-react";
 import { useContext } from "react";
 
 export function HeaderComponent() {
-  const { cartProducts, handleOpenCartModal } = useContext(CartContext);
+  const { cartProducts, totalItemsCart, handleOpenCartModal } =
+    useContext(CartContext);
 
   return (
     <Header>
@@ -15,7 +16,7 @@ export function HeaderComponent() {
       <CartButton onClick={handleOpenCartModal}>
         {cartProducts?.length > 0 && (
           <CartCount>
-            <span>{cartProducts.length}</span>
+            <span>{totalItemsCart}</span>
           </CartCount>
         )}
         <Handbag size={24} weight="bold" color="#8D8D99" />

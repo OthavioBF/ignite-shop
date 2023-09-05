@@ -9,41 +9,33 @@ import {
 } from "@/styles/components/cart";
 import axios from "axios";
 import Image from "next/image";
-import { X } from "phosphor-react";
-import { useContext } from "react";
+import { Minus, Plus, Trash, X } from "phosphor-react";
+import { useContext, useEffect, useState } from "react";
 
 export function CartModal() {
   const {
     openCartModal,
     cartProducts,
+    totalItemsCart,
+    totalToPay,
+    handleAddToCart,
+    handleDecrementItemCart,
     handleRemoveFromCart,
     handleOpenCartModal,
   } = useContext(CartContext);
 
-  // async function handleBuyProduct() {
-  //   try {
-  //     const response = await axios.post("/api/checkout", {
-  //       priceId: product.defaultPriceId,
-  //     });
+  async function handleBuyProduct() {
+    try {
+      const response = await axios.post("/api/checkout", {
+        products: cartProducts,
+      });
 
-  //     const { checkoutUrl } = response.data;
+      const { checkoutUrl } = response.data;
 
-  //     window.location.href = checkoutUrl;
-  //   } catch (err) {
-  //     alert("Falha ao redirecionar para checkout!");
-  //   }
-  // }
-
-  function getTotalCart() {
-    const totalCart = cartProducts.reduce((acc, item) => {
-      const price = item.price.replace(/[^\d.,]/g, "").replace(",", ".");
-      return acc + parseFloat(price);
-    }, 0);
-
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(totalCart);
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      alert("Falha ao redirecionar para checkout!");
+    }
   }
 
   return (
@@ -70,9 +62,26 @@ export function CartModal() {
 
                 <span>{cartProduct.price}</span>
 
-                <button onClick={() => handleRemoveFromCart(cartProduct.id)}>
-                  Remover
-                </button>
+                <div>
+                  {cartProduct.quantity === 1 ? (
+                    <button
+                      onClick={() => handleRemoveFromCart(cartProduct.id)}
+                    >
+                      <Trash size={24} color="#00875f" weight="bold" />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleDecrementItemCart(cartProduct.id)}
+                    >
+                      <Minus size={24} color="#00875f" weight="bold" />
+                    </button>
+                  )}
+                  <div>{cartProduct.quantity}</div>
+
+                  <button onClick={(e: any) => handleAddToCart(e, cartProduct)}>
+                    <Plus size={24} color="#00875f" weight="bold" />
+                  </button>
+                </div>
               </div>
             </CartItem>
           ))}
@@ -83,11 +92,11 @@ export function CartModal() {
         <div>
           <div>
             <p>Quantidade</p>
-            <span>{cartProducts.length} itens</span>
+            <span>{totalItemsCart} itens</span>
           </div>
           <div>
             <strong>Valor total</strong>
-            <strong>{getTotalCart()}</strong>
+            <strong>{totalToPay}</strong>
           </div>
         </div>
 
