@@ -10,13 +10,16 @@ import Link from "next/link";
 import Stripe from "stripe";
 import Head from "next/head";
 import Logo from "../../assets/Logo.svg";
+import { Product } from "@/contexts/cartContext";
 
 interface SuccessProps {
   clientName: string;
   product: {
-    name: string;
+    id: string;
     imageUrl: string;
-  };
+    quantity: number;
+    description: string;
+  }[];
 }
 
 export default function Success({ clientName, product }: SuccessProps) {
@@ -31,29 +34,28 @@ export default function Success({ clientName, product }: SuccessProps) {
       <Container>
         <Image src={Logo} alt="" />
         <ImagesContainer>
-          <ImageContainer>
-            <Image src="" width={120} height={110} alt="" />
-          </ImageContainer>
-          <ImageContainer>
-            <Image src="" width={120} height={110} alt="" />
-          </ImageContainer>
-          <ImageContainer>
-            <Image src="" width={120} height={110} alt="" />
-          </ImageContainer>
-          <ImageContainer>
-            <Image src="" width={120} height={110} alt="" />
-          </ImageContainer>
-          <ImageContainer>
-            <Image src="" width={120} height={110} alt="" />
-          </ImageContainer>
+          {product.map((product) => (
+            <ImageContainer key={product.id}>
+              <Image src={product.imageUrl} width={120} height={110} alt="" />
+            </ImageContainer>
+          ))}
         </ImagesContainer>
 
         <h1>Compra Efetuada</h1>
 
-        <p>
-          Uhuul <strong>Diego Fernandes</strong>, suas{" "}
-          <strong>3 camisetas</strong> já está a caminho da sua casa.{" "}
-        </p>
+        {product.length > 1 ? (
+          <p>
+            Uhuul <strong>{clientName}</strong>, suas{" "}
+            <strong>{product.length} camisetas</strong> já estão a caminho da
+            sua casa.{" "}
+          </p>
+        ) : (
+          <p>
+            Uhuul <strong>{clientName}</strong>, sua{" "}
+            <strong>{product[0].description}</strong> já está a caminho da sua
+            casa.{" "}
+          </p>
+        )}
 
         <Link href="/">Voltar ao catalogo</Link>
       </Container>
@@ -61,29 +63,38 @@ export default function Success({ clientName, product }: SuccessProps) {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-//   if (!query.session_id) {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
-//   const sessionId = String(query.session_id);
-//   const session = await stripe.checkout.sessions.retrieve(sessionId, {
-//     expand: ["line_items", "line_items.data.price.product"],
-//   });
-//   const clientName = session.costumer_details?.name;
-//   const product = session.line_items?.data[0].price?.product as Stripe.Product;
-//   return {
-//     props: {
-//       clientName,
-//       product: {
-//         name: product.name,
-//         imageUrl: product.images[0],
-//       },
-//     },
-//     revalidate: 60 * 60 * 2, // 2 horas
-//   };
-// };
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  if (!query.session_id) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const sessionId = String(query.session_id);
+
+  const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items", "line_items.data.price.product"],
+  });
+
+  const clientName = session.customer_details?.name;
+
+  const product = session.line_items?.data.map((item) => {
+    const productImage = item.price?.product as Stripe.Product;
+    return {
+      id: item.id,
+      imageUrl: productImage.images[0],
+      quantity: item.quantity,
+      description: item.description,
+    };
+  });
+
+  return {
+    props: {
+      clientName,
+      product,
+    },
+  };
+};

@@ -11,7 +11,7 @@ import Link from "next/link";
 import Head from "next/head";
 import { Handbag } from "phosphor-react";
 import { useContext } from "react";
-import { CartContext } from "@/contexts/cartContext";
+import { CartContext, Product as ProductProps } from "@/contexts/cartContext";
 import { HeaderComponent } from "@/components/Header";
 import { CartModal } from "@/components/CartModal";
 
@@ -23,7 +23,7 @@ interface ServerProduct {
 }
 
 interface HomeProps {
-  products: ServerProduct[];
+  products: ProductProps[];
 }
 
 export default function Home({ products }: HomeProps) {
@@ -89,6 +89,7 @@ export const getStaticProps: GetStaticProps = async () => {
         style: "currency",
         currency: "BRL",
       }).format(price.unit_amount! / 100),
+      defaultPriceId: price.id,
     };
   });
 

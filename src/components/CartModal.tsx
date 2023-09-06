@@ -100,7 +100,7 @@ export function CartModal() {
           </div>
         </div>
 
-        <button>Finalizar compra</button>
+        <button onClick={handleBuyProduct}>Finalizar compra</button>
       </PriceSection>
     </Container>
   );

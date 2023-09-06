@@ -18,7 +18,9 @@ interface ProductProps {
     id: string;
     name: string;
     imageUrl: string;
+    images: Array<any>;
     price: string;
+    quantity: number;
     description: string;
     defaultPriceId: string;
   };

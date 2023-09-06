@@ -5,6 +5,7 @@ export type Product = {
   id: string;
   name: string;
   imageUrl: string;
+  images: Array<any>;
   price: string;
   quantity: number;
   description?: string;
@@ -35,8 +36,6 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   const [totalItemsCart, setTotalItemsCart] = useState(0);
   const [totalToPay, setTotalToPay] = useState("");
   const [openCartModal, setOpenCartModal] = useState<boolean>(false);
-
-  console.log("products", cartProducts);
 
   function handleAddToCart(e: Event, product: Product) {
     e.preventDefault();
